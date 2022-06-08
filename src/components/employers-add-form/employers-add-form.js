@@ -37,13 +37,15 @@ class EmployersAddForm extends Component {
                            placeholder='Имя'
                            name={'name'}
                            value={name}
-                           onChange={this.onValueChange}/>
+                           onChange={this.onValueChange}
+                           required/>
                     <input type="number"
                            className='form-control new-post-label'
                            placeholder='З\П в $'
                            name={'salary'}
                            value={salary}
-                           onChange={this.onValueChange}/>
+                           onChange={this.onValueChange}
+                           required/>
                     <button type="submit" className='btn btn-outline-light'>Добавить</button>
                 </form>
             </div>
