@@ -19,7 +19,9 @@ class App extends Component {
                 {name: 'John Smith', salary: 1000, increase: false, rise: false, id: uuidv4()},
                 {name: 'Sam Winchester', salary: 800, increase: false, rise: false, id: uuidv4()},
                 {name: 'Den Steal', salary: 1200, increase: false, rise: false, id: uuidv4()}
-            ]
+            ],
+            term: '',
+            filter: 'all'
         }
     }
 
@@ -57,17 +59,48 @@ class App extends Component {
         }))
     }
 
+    searchEmp = (items, term) => {
+        if (term.length === 0) {
+            return items
+        }
+        return items.filter(item => {
+            return item.name.indexOf(term) > -1
+        })
+    }
+
+    onUpdateSearch = term => {
+        this.setState({term})
+    }
+
+    filterPost = (items, filter) => {
+        switch (filter) {
+            case 'rise':
+                return items.filter(i => i.rise)
+            case 'moreThen1000':
+                return items.filter(i => i.salary > 1000)
+            default:
+                return items
+        }
+    }
+
+    onFilterSelect = (filter) => {
+        this.setState({filter})
+    }
+
     render() {
-        const increased = this.state.data.filter(i => i.increase).length
+        const {data, term, filter} = this.state
+        const increased = data.filter(i => i.increase).length
+        const visibleData = this.filterPost(this.searchEmp(data, term), filter)
+
         return (
             <div className='app'>
-                <AppInfo allItems={this.state.data.length} allItemsWithCookie={increased}/>
+                <AppInfo allItems={data.length} allItemsWithCookie={increased}/>
                 <div className="search-panel">
-                    <SearchPanel/>
-                    <AppFilter/>
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>
                 </div>
                 <EmployersList
-                    data={this.state.data}
+                    data={visibleData}
                     onDelete={this.deleteItem}
                     onToggleProp={this.onToggleProp}
                 />
